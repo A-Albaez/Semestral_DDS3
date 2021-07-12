@@ -5,6 +5,14 @@
  */
 package utp.desarrollo;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Adrian Albaez
@@ -16,6 +24,12 @@ public class InicioSesion extends javax.swing.JFrame {
      */
     public InicioSesion() {
         initComponents();
+        DefaultTableModel modelo = new DefaultTableModel ();
+        modelo.addColumn("No Factura");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Fecha");
+       // jtresultado.setModel(modelo);
     }
 
     /**
@@ -30,9 +44,9 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jTextCorreoEL = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        jPassContraseña = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,7 +59,7 @@ public class InicioSesion extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel3.setText("Contraseña");
 
-        jTextField2.setDisabledTextColor(new java.awt.Color(40, 91, 95));
+        jTextCorreoEL.setDisabledTextColor(new java.awt.Color(40, 91, 95));
 
         jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jButton1.setText("Iniciar sesión");
@@ -55,7 +69,7 @@ public class InicioSesion extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField1.setText("jPasswordField1");
+        jPassContraseña.setText("jPasswordField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -74,13 +88,13 @@ public class InicioSesion extends javax.swing.JFrame {
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+                        .addComponent(jTextCorreoEL, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(144, 144, 144)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPasswordField1)))
+                        .addComponent(jPassContraseña)))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -91,11 +105,11 @@ public class InicioSesion extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextCorreoEL, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPassContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addContainerGap(24, Short.MAX_VALUE))
@@ -106,6 +120,54 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String fecha = jTextCorreoEL.getText();
+        String sql;
+        if(!fecha.equals("")){
+            JOptionPane.showMessageDialog(rootPane,"¡Datos validados con éxito!","",JOptionPane.INFORMATION_MESSAGE);
+            /*DefaultTableModel modelo = new DefaultTableModel();
+            String titulos[] = {"No Factura","Nombre","Precio","Fecha"};
+            modelo= new  DefaultTableModel (null,titulos);
+            ConectarBaseDeDatos Con = new ConectarBaseDeDatos();
+            try {
+                Con.conectarDB();
+                String datos [] = new String[4];
+                sql= " SELECT a.num_factura, b.nombre, a.fecha, sum(c.precio*c.cantidad) as precio ";
+                sql+= " from facturas a, clientes b, detalles_factura c ";
+                sql+= " where a.id_cliente=b.id_cliente and a.num_factura=c.num_factura and a.fecha=? ";
+                sql+= "GROUP BY a.num_factura";
+                PreparedStatement st;
+                try {
+                    st = Con.conexion.prepareStatement(sql);
+                    st.setString(1, fecha);
+                    ResultSet resultado = st.executeQuery();
+                    resultado.last();
+                    int count = resultado.getRow();
+                    if(count!=0){
+                        resultado.beforeFirst();
+                        while(resultado.next()){
+                            datos [0] = resultado.getString("num_factura");
+                            datos [1] = resultado.getString("nombre");
+                            datos [2] = resultado.getString("precio");
+                            datos [3] = resultado.getString("fecha");
+                            modelo.addRow(datos);
+                        }
+                        resultado.close();
+                      //  jtresultado.setModel(modelo);
+                        Con.desconectarDB();                   
+                    }else{
+                     JOptionPane.showMessageDialog(rootPane," !No hay datos para esta fecha¡","",JOptionPane.WARNING_MESSAGE);
+                    }
+                }catch (SQLException ex) {
+                    Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            */
+        } else {
+            JOptionPane.showMessageDialog(rootPane,"¡¡¡Hay campos vacios!!!","",JOptionPane.WARNING_MESSAGE);
+        } 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -148,7 +210,7 @@ public class InicioSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField jPassContraseña;
+    private javax.swing.JTextField jTextCorreoEL;
     // End of variables declaration//GEN-END:variables
 }

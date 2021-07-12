@@ -5,6 +5,11 @@
  */
 package utp.desarrollo;
 
+import java.awt.Color;
+
+
+
+
 /**
  *
  * @author Adrian Albaez
@@ -16,6 +21,8 @@ public class Forma extends javax.swing.JFrame {
      */
     public Forma() {
         initComponents();
+        this.getContentPane().setBackground(Color.GREEN);
+
     }
 
     /**
@@ -35,6 +42,7 @@ public class Forma extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel1.setFont(new java.awt.Font("Georgia", 1, 24)); // NOI18N
         jLabel1.setText("Bienvenido a farmacias EGPH");
@@ -55,7 +63,12 @@ public class Forma extends javax.swing.JFrame {
         jMenu2.setText("REGISTRARSE");
         jMenu2.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
 
-        jMenuItem2.setText("INGRESAR DATOS");
+        jMenuItem2.setText("CREAR CLIENTE");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
@@ -87,6 +100,12 @@ public class Forma extends javax.swing.JFrame {
          InicioSesion verform = new InicioSesion();
          verform.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        Registro verform = new Registro();
+        verform.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
